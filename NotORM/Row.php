@@ -10,9 +10,9 @@ class NotORM_Row extends NotORM_Abstract implements IteratorAggregate, ArrayAcce
 	function __construct(array $row, NotORM_Result $result) {
 		$this->result = $result;
     $this->row = $row;
-    $this->reload_data($row);
 
 		if (array_key_exists($result->primary, $row)) {
+      $this->reload_data($row);
 			$this->primary = $row[$result->primary];
 		}
 	}
