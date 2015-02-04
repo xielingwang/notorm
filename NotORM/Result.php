@@ -35,7 +35,10 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 
     $columns[$table] = array();
     $st = $conn->query("show columns from `$table`;");
-    foreach( $st as $row ) {
+    if(!$st) {
+      1;//die("show columns from `$table`;");
+    }
+    foreach($st as $row) {
       $row = array_change_key_case($row);
       $columns[$table][] = $row['field'];
     }
@@ -257,7 +260,8 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 		}
 
     foreach($rows as &$_) {
-      $_ = $this->filter_data($_);
+      if(is_array($_))
+        $_ = $this->filter_data($_);
     }
 
 		$data = reset($rows);
@@ -481,7 +485,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 			if (!$clone->select) {
 				$clone->select($this->notORM->structure->getPrimary($clone->table));
 			}
-			if ($this->notORM->driver != "mysql") {
+			if ($this->notORM->driver == "mysql") {
 				if ($clone instanceof NotORM_MultiResult) {
 					array_shift($clone->select);
 					$clone->single();
